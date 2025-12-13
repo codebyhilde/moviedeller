@@ -1,0 +1,19 @@
+{
+  "name": "moviedeller",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --parallel dev",
+    "build": "pnpm --parallel build",
+    "lint": "pnpm --parallel lint",
+    "start:web": "pnpm --filter web dev",
+    "start:api": "pnpm --filter api dev",
+    "type-check": "pnpm --parallel type-check",
+    "clean": "rm -rf node_modules && rm -rf apps/*/node_modules"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  }
+}
