@@ -1,0 +1,25 @@
+// Mapeo de géneros inglés-español
+export const GENRE_MAP = {
+    "Action": "Acción",
+    "Adventure": "Aventura",
+    "Animation": "Animación",
+    "Biography": "Biografía",
+    "Comedy": "Comedia",
+    "Crime": "Crimen",
+    "Documentary": "Documental",
+    "Drama": "Drama",
+    "Family": "Familia",
+    "Fantasy": "Fantasía",
+    "Film-Noir": "Cine negro",
+    "History": "Historia",
+    "Horror": "Terror",
+    "Music": "Música",
+    "Musical": "Musical",
+    "Mystery": "Misterio",
+    "Romance": "Romance",
+    "Sci-Fi": "Ciencia ficción",
+    "Sport": "Deporte",
+    "Thriller": "Suspenso",
+    "War": "Guerra",
+    "Western": "Western"
+} as const;
