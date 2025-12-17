@@ -4,6 +4,8 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { randomUUID } from "node:crypto";
 
+import { translate } from "google-translate-api-x";
+
 import type { Movie } from "../src/types/movie.types.js";
 import type { OMDBMovie, OMDBResponse } from "../src/types/omdb.types.js";
 
@@ -60,7 +62,9 @@ async function fetchAndTransformMovies(): Promise<Movie[]> {
     const transformedMovies: Movie[] = [];
     const omdbapiUrl = "http://www.omdbapi.com/";
 
-    console.log(`Iniciando obtención de ${MOVIES_LIST.length} películas...`);
+    console.log(
+        `Iniciando obtención y traducción de ${MOVIES_LIST.length} películas...`
+    );
 
     for (const [index, title] of MOVIES_LIST.entries()) {
         try {
@@ -90,7 +94,7 @@ async function fetchAndTransformMovies(): Promise<Movie[]> {
                 );
             }
 
-            const data = await response.json() as OMDBResponse;
+            const data = (await response.json()) as OMDBResponse;
 
             if (data.Response === "False") {
                 throw new Error(
@@ -100,6 +104,25 @@ async function fetchAndTransformMovies(): Promise<Movie[]> {
             }
 
             const movie = data;
+
+            const englishPlot =
+                movie.Plot !== "N/A" ? movie.Plot : "No description available";
+            let spanishPlot = "Sin descripción disponible";
+
+            // Lógica de traducción
+            if (movie.Plot !== "N/A") {
+                try {
+                    const translation = await translate(englishPlot, {
+                        to: "es"
+                    });
+                    spanishPlot = translation.text;
+                } catch (error) {
+                    console.warn(
+                        `  ⚠️ Falló traducción de "${title}", usando original.`
+                    );
+                    spanishPlot = englishPlot;
+                }
+            }
 
             // Transformar los datos
             const originalGenres = parseGenres(movie.Genre);
@@ -117,19 +140,12 @@ async function fetchAndTransformMovies(): Promise<Movie[]> {
                 translations: {
                     en: {
                         title: movie.Title,
-                        plot:
-                            movie.Plot !== "N/A"
-                                ? movie.Plot
-                                : "Sin descripción disponible",
+                        plot: englishPlot,
                         genre: originalGenres
                     },
                     es: {
                         title: spanishTitle,
-                        plot:
-                            "[TRADUCCIÓN PENDIENTE] - " +
-                            (movie.Plot !== "N/A"
-                                ? movie.Plot
-                                : "Sin descripción disponible"),
+                        plot: spanishPlot,
                         genre: translateGenres(originalGenres)
                     }
                 }
@@ -139,7 +155,7 @@ async function fetchAndTransformMovies(): Promise<Movie[]> {
             console.log(`  ✅ Procesada: ${title}`);
 
             // Pequeña pausa para no sobrecargar la API
-            await new Promise(resolve => setTimeout(resolve, 200));
+            await new Promise(resolve => setTimeout(resolve, 300));
         } catch (error) {
             console.error(
                 `  ❌ Error procesando "${title}":`,
