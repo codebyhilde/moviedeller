@@ -1,41 +1,32 @@
 {
   "compilerOptions": {
-    // File Layout
-    "rootDir": "./src",
+    "rootDir": ".",
     "outDir": "./dist",
-
-    // Environment Settings
     "module": "nodenext",
-    "target": "esnext",
-    // For nodejs:
     "moduleResolution": "nodenext",
-    "lib": ["es2022", "DOM"],
-    "types": ["node", "express", "cors"],
-    // and npm install -D @types/node
-
-    // Other Outputs
-    "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true,
-
-    // Stricter Typechecking Options
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
-
-    // Style Options
-    // "noImplicitReturns": true,
-    // "noImplicitOverride": true,
-    // "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    // "noFallthroughCasesInSwitch": true,
-    // "noPropertyAccessFromIndexSignature": true,
-
-    // Recommended Options
+    "moduleDetection": "force",
+    "target": "es2022",
+    "lib": ["es2022"],
+    "downlevelIteration": true,
+    "types": ["node", "cors", "express"],
+    "skipLibCheck": true,
     "strict": true,
+    "noUnusedParameters": true,
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
-    "noUncheckedSideEffectImports": true,
-    "moduleDetection": "force",
-    "skipLibCheck": true
-  }
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true
+  },
+  
+  "include": [
+    "src/**/*",
+    "scripts/**/*",
+    "data/**/*"
+  ],
+  
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
