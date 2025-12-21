@@ -1,0 +1,15 @@
+### Nota: para probar directamente los endpoints, asegurate de tener instalada alguna extensión como REST Client y haber iniciado el servidor
+### Recuperar todas las películas
+GET http://localhost:3001/movies
+
+### Recuperar todas las películas en español
+GET http://localhost:3001/movies?lang=es
+
+### Recuperar una película por el imdb_id
+GET http://localhost:3001/movies/tt2262227
+
+### Recuperar una película por el imdb_id en español
+GET http://localhost:3001/movies/tt2262227?lang=es
+
+### Recuperar películas usando filtros, como género y año (aplicable con: actor, director, lang, min_rating, max_rating, genre y year)
+GET http://localhost:3001/movies?genre=Drama&year=1999
