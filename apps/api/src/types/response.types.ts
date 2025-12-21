@@ -1,4 +1,4 @@
-export interface Movie {
+export interface MovieResponse {
   id: string;
   imdb_id: string;
   year: number | null;
@@ -7,14 +7,12 @@ export interface Movie {
   actors: string[];
   poster: string | null;
   rate: number | null;
-  translations: {
-    en: MovieTranslation;
-    es: MovieTranslation;
-  };
-}
-
-export interface MovieTranslation {
   title: string;
   plot: string;
   genre: string[];
+}
+
+export interface MoviesCollectionResponse {
+  count: number;
+  movies: MovieResponse[];
 }
