@@ -14,7 +14,6 @@ app.get("/", (_req: Request, res: Response) => {
         status: "ok",
         message: "Movie API is running",
         version: "1.0.0",
-        // totalMovies: movies.length,
         supportedLanguages: ["en", "es"]
     });
 });
