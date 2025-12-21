@@ -14,7 +14,13 @@ app.disable("x-powered-by");
 const PORT = process.env.PORT ?? 3001;
 
 app.get("/", (_req: Request, res: Response) => {
-    res.status(200).send("¡Servidor de películas operativo!");
+    res.json({
+        status: "ok",
+        message: "Movie API is running",
+        version: "1.0.0",
+        totalMovies: movies.length,
+        supportedLanguages: ["en", "es"]
+    });
 });
 
 app.get(
