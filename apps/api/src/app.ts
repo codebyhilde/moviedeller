@@ -1,5 +1,6 @@
 import "dotenv/config";
 import express, { type Express, type Request, type Response } from "express";
+import { corsMiddleware } from "./middlewares/cors.js";
 import { moviesRouter } from "./routes/movies.routes.js";
 
 const app: Express = express();
@@ -18,6 +19,10 @@ app.get("/", (_req: Request, res: Response) => {
     });
 });
 
+// Uso de cors
+app.use(corsMiddleware());
+
+// Enrutamiento de la API
 app.use("/movies", moviesRouter);
 
 app.listen(PORT, () => {
