@@ -96,7 +96,7 @@ function App() {
                 onApply={fetchMovies}
             />
             <footer className="p-4 text-center text-gray-300">
-                <p>©Moviedeller - 2024</p>
+                <p>©Moviedeller - 2025</p>
             </footer>
         </div>
     );
