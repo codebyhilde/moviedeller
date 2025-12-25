@@ -23,6 +23,6 @@ export interface FilterState {
   year?: string;
   director?: string;
   genre?: string;
-  min_rate?: number;
-  max_rate?: number;
+  min_rating?: number;
+  max_rating?: number;
 }
