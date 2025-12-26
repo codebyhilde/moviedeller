@@ -1,71 +1,20 @@
-import { useEffect, useState, useMemo } from "react";
-import type { Movie, MovieResponse, FilterState } from "./types/response.types";
+import { useEffect } from "react";
 import { Header } from "./components/Header";
 import { MovieCard } from "./components/MovieCard";
 import { FilterSidebar } from "./components/FilterSidebar";
 import { NoMoviesFound } from "./components/NoMoviesFound";
-
-const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3001/movies";
+import { useMovies } from "./hooks/useMovies";
+import { useFilters } from "./hooks/useFilters";
 
 function App() {
-    const [movies, setMovies] = useState<Movie[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [isFilterOpen, setIsFilterOpen] = useState(false);
-    
-    const initialFiltersState: FilterState = useMemo(() => ({
-        genre: "",
-        year: "",
-        actor: "",
-        director: "",
-        min_rating: 0,
-        max_rating: 10,
-        lang: "en"
-    }), []);
-    
-    const [filters, setFilters] = useState<FilterState>(initialFiltersState);
-    
-    const resetFilters = () => {
-      setFilters(initialFiltersState);
-    }
-    
-    const fetchMovies = async () => {
-        try {
-            setLoading(true);
-            setError(null);
-            setMovies([]);
-
-            // Construir query string con filtros
-            const queryParams = new URLSearchParams();
-
-            Object.entries(filters).forEach(([key, value]) => {
-                if (value) {
-                    queryParams.append(key, value);
-                }
-            });
-
-            const url = `${API_URL}?${queryParams.toString()}`;
-            const response = await fetch(url);
-
-            if (!response.ok) {
-                throw new Error(
-                    `Error ${response.status}: ${response.statusText}`
-                );
-            }
-
-            const data: MovieResponse = await response.json();
-            setMovies(data.movies);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : "Error desconocido");
-        } finally {
-            setLoading(false);
-        }
-    };
+    const { movies, loading, error, fetchMovies } = useMovies();
+    const { isFilterOpen, setIsFilterOpen, filters, setFilters, resetFilters } =
+        useFilters();
 
     // Cargar películas al montar el componente
     useEffect(() => {
-        fetchMovies();
-    }, []);
+        fetchMovies(filters);
+    }, [fetchMovies]);
 
     if (loading) {
         return (
@@ -100,7 +49,7 @@ function App() {
                 onClose={() => setIsFilterOpen(false)}
                 filters={filters}
                 setFilters={setFilters}
-                onApply={fetchMovies}
+                onApply={() => fetchMovies(filters)}
                 onReset={resetFilters}
             />
             <footer className="p-4 text-center text-gray-300">
