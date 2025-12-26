@@ -12,6 +12,7 @@ interface FilterSidebarProps {
     filters: FilterState;
     setFilters: (f: FilterState) => void;
     onApply: () => void;
+    onReset: () => void;
 }
 
 export function FilterSidebar({
@@ -19,7 +20,8 @@ export function FilterSidebar({
     onClose,
     filters,
     setFilters,
-    onApply
+    onApply,
+    onReset
 }: FilterSidebarProps) {
     if (!isOpen) return null;
 
@@ -59,7 +61,9 @@ export function FilterSidebar({
                     />
                 </div>
 
-                <FilterFooter onApply={onApply} onClose={onClose} />
+                <FilterFooter onApply={onApply} onClose={onClose}
+                 onReset={onReset}
+                />
             </div>
         </div>
     );

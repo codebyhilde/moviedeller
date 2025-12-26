@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import type { Movie, MovieResponse, FilterState } from "./types/response.types";
 import { Header } from "./components/Header";
 import { MovieCard } from "./components/MovieCard";
@@ -12,7 +12,8 @@ function App() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const [filters, setFilters] = useState<FilterState>({
+    
+    const initialFiltersState: FilterState = useMemo(() => ({
         genre: "",
         year: "",
         actor: "",
@@ -20,8 +21,14 @@ function App() {
         min_rating: 0,
         max_rating: 10,
         lang: "en"
-    });
-
+    }), []);
+    
+    const [filters, setFilters] = useState<FilterState>(initialFiltersState);
+    
+    const resetFilters = () => {
+      setFilters(initialFiltersState);
+    }
+    
     const fetchMovies = async () => {
         try {
             setLoading(true);
@@ -94,6 +101,7 @@ function App() {
                 filters={filters}
                 setFilters={setFilters}
                 onApply={fetchMovies}
+                onReset={resetFilters}
             />
             <footer className="p-4 text-center text-gray-300">
                 <p>©Moviedeller - 2025</p>
