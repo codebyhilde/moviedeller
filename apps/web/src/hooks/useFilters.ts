@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import type { FilterState } from "../types/response.types";
 
 export function useFilters() {
@@ -9,31 +9,34 @@ export function useFilters() {
         director: ""
     });
 
-    const validateName = (name: "actor" | "director", value: string) => {
-        let error = "";
+    const validateName = useCallback(
+        (name: "actor" | "director", value: string) => {
+            let error = "";
 
-        const trimmedValue = value.trim();
+            const trimmedValue = value.trim();
 
-        const isValidName = (text: string): boolean => {
-            // Regex que permite letras, acentos, ñ, ü y espacios
-            return /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/.test(text);
-        };
-
-        if (!isValidName(trimmedValue)) {
-            const fieldNames: Record<string, string> = {
-                actor: "Actor",
-                director: "Director"
+            const isValidName = (text: string): boolean => {
+                // Regex que permite letras, acentos, ñ, ü y espacios
+                return /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/.test(text);
             };
 
-            error = `${
-                fieldNames[name] || "field"
-            } can only contain letters and spaces"`;
-        }
+            if (!isValidName(trimmedValue)) {
+                const fieldNames: Record<string, string> = {
+                    actor: "Actor",
+                    director: "Director"
+                };
 
-        setFilterFormatErrors(prev => ({ ...prev, [name]: error }));
-    };
+                error = `${
+                    fieldNames[name] || "field"
+                } can only contain letters and spaces"`;
+            }
 
-    const validateYear = (name: "year", value: string) => {
+            setFilterFormatErrors(prev => ({ ...prev, [name]: error }));
+        },
+        []
+    );
+
+    const validateYear = useCallback((name: "year", value: string) => {
         let error = "";
         const trimmedValue = value.trim();
         const currentYear = new Date().getFullYear();
@@ -58,13 +61,20 @@ export function useFilters() {
             }
         }
 
-        setFilterFormatErrors(prev => ({ ...prev, [name]: error }));
-    };
+        setFilterFormatErrors(prev => ({ ...prev, year: error }));
+    }, []);
 
-    const isApplyButtonDisabled =
-        !!filterFormatErrors.year ||
-        !!filterFormatErrors.actor ||
-        !!filterFormatErrors.director;
+    const isApplyButtonDisabled = useMemo(
+        () =>
+            !!filterFormatErrors.year ||
+            !!filterFormatErrors.actor ||
+            !!filterFormatErrors.director,
+        [
+            filterFormatErrors.year,
+            filterFormatErrors.actor,
+            filterFormatErrors.director
+        ]
+    );
 
     const initialFiltersState: FilterState = useMemo(
         () => ({
@@ -81,9 +91,9 @@ export function useFilters() {
 
     const [filters, setFilters] = useState<FilterState>(initialFiltersState);
 
-    const resetFilters = () => {
+    const resetFilters = useCallback(() => {
         setFilters(initialFiltersState);
-    };
+    }, [initialFiltersState]);
 
     return {
         isFilterOpen,
