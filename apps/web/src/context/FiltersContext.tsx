@@ -20,6 +20,10 @@ interface FiltersContextType {
     openFilters: () => void;
     closeFilters: () => void;
     updateFilters: (updates: Partial<FilterState>) => void;
+    handleFiltersChange: (
+        key: keyof FilterState,
+        value: string | number
+    ) => void;
     resetFilters: () => void;
     validateName: (name: "actor" | "director", value: string) => void;
     validateYear: (name: "year", value: string) => void;
@@ -113,6 +117,13 @@ export function FiltersProvider({ children }: FiltersProviderProps) {
         dispatch({ type: "UPDATE_FILTERS", payload: updates });
     }, []);
 
+    const handleFiltersChange = useCallback(
+        (key: keyof FilterState, value: string | number) => {
+            updateFilters({ [key]: value });
+        },
+        [updateFilters]
+    );
+
     const resetFilters = useCallback(() => {
         dispatch({ type: "RESET_FILTERS" });
     }, []);
@@ -191,6 +202,7 @@ export function FiltersProvider({ children }: FiltersProviderProps) {
         openFilters,
         closeFilters,
         updateFilters,
+        handleFiltersChange,
         resetFilters,
         validateName,
         validateYear

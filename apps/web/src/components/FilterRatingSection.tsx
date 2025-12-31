@@ -1,14 +1,8 @@
-import type { FilterState } from "../types/response.types";
+import { useFiltersContext } from "../context/FiltersContext";
 
-interface FilterRatingSectionProps {
-    filters: FilterState;
-    handleChange: (key: keyof FilterState, value: string | number) => void;
-}
+export function FilterRatingSection() {
+    const { filters, handleFiltersChange } = useFiltersContext();
 
-export function FilterRatingSection({
-    filters,
-    handleChange
-}: FilterRatingSectionProps) {
     return (
         <section className="space-y-6">
             <div>
@@ -28,9 +22,9 @@ export function FilterRatingSection({
                     value={filters.min_rating || 0}
                     onChange={e => {
                         const value = parseFloat(e.target.value);
-                        handleChange("min_rating", value);
+                        handleFiltersChange("min_rating", value);
                         if (value > (filters.max_rating || 10)) {
-                            handleChange("max_rating", value);
+                            handleFiltersChange("max_rating", value);
                         }
                     }}
                     className="w-full h-2 bg-surface-dark rounded-lg appearance-none cursor-pointer accent-primary"
@@ -54,9 +48,9 @@ export function FilterRatingSection({
                     value={filters.max_rating || 10}
                     onChange={e => {
                         const value = parseFloat(e.target.value);
-                        handleChange("max_rating", value);
+                        handleFiltersChange("max_rating", value);
                         if (value < (filters.min_rating || 0)) {
-                            handleChange("min_rating", value);
+                            handleFiltersChange("min_rating", value);
                         }
                     }}
                     className="w-full h-2 bg-surface-dark rounded-lg appearance-none cursor-pointer accent-primary"

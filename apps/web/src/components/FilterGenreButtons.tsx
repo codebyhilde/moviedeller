@@ -1,23 +1,22 @@
-import type { FilterState } from "../types/response.types";
+import { useFiltersContext } from "../context/FiltersContext";
 
 interface FilterGenreButtonsProps {
     genres: readonly string[];
-    filters: FilterState;
-    handleChange: (key: keyof FilterState, value: string | number) => void;
 }
 
-export function FilterGenreButtons({
-    genres,
-    filters,
-    handleChange
-}: FilterGenreButtonsProps) {
+export function FilterGenreButtons({ genres }: FilterGenreButtonsProps) {
+    const { filters, handleFiltersChange } = useFiltersContext();
+
     return (
         <div className="flex flex-wrap gap-2">
             {genres.map(g => (
                 <button
                     key={g}
                     onClick={() =>
-                        handleChange("genre", g === filters.genre ? "" : g)
+                        handleFiltersChange(
+                            "genre",
+                            g === filters.genre ? "" : g
+                        )
                     }
                     className={`px-4 py-2 rounded-xl text-sm font-medium transition-[background-color,color,box-shadow,border-color] duration-200 ${
                         filters.genre === g

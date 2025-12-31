@@ -11,15 +11,7 @@ interface FilterSidebarProps {
 }
 
 export function FilterSidebar({ onApply }: FilterSidebarProps) {
-    const { isFilterOpen, closeFilters, updateFilters, filters, resetFilters } =
-        useFiltersContext();
-
-    const handleChange = (
-        key: keyof typeof filters,
-        value: string | number
-    ) => {
-        updateFilters({ [key]: value });
-    };
+    const { isFilterOpen, closeFilters } = useFiltersContext();
 
     if (!isFilterOpen) return null;
 
@@ -31,35 +23,18 @@ export function FilterSidebar({ onApply }: FilterSidebarProps) {
             ></div>
 
             <div className="relative w-full max-w-md h-full bg-background-dark shadow-2xl border-l border-white/5 flex flex-col animate-slide-in-right">
-                <FilterHeader onClose={closeFilters} />
+                <FilterHeader />
 
                 <div className="flex-1 overflow-y-auto p-6 space-y-8">
-                    <FilterGenreSection
-                        filters={filters}
-                        handleChange={handleChange}
-                    />
+                    <FilterGenreSection />
+                    <FilterBasicInfoSection />
 
-                    <FilterBasicInfoSection
-                        filters={filters}
-                        handleChange={handleChange}
-                    />
+                    <FilterPeopleSection />
 
-                    <FilterPeopleSection
-                        filters={filters}
-                        handleChange={handleChange}
-                    />
-
-                    <FilterRatingSection
-                        filters={filters}
-                        handleChange={handleChange}
-                    />
+                    <FilterRatingSection />
                 </div>
 
-                <FilterFooter
-                    onApply={onApply}
-                    onClose={closeFilters}
-                    onReset={resetFilters}
-                />
+                <FilterFooter onApply={onApply} />
             </div>
         </div>
     );
