@@ -1,4 +1,5 @@
 import { useFiltersContext } from "../context/FiltersContext";
+import { FilterInputError } from "./FilterInputError";
 import { ChevronDown } from "lucide-react";
 
 /*
@@ -6,7 +7,8 @@ import { ChevronDown } from "lucide-react";
  * Configura el lenguaje a utilizar en la respuesta de la API (Inglés/Español)
  */
 export function FilterBasicInfoSection() {
-    const { filters, handleFiltersChange } = useFiltersContext();
+    const { filters, handleFiltersChange, validateYear, filterFormatErrors } =
+        useFiltersContext();
 
     return (
         <section className="space-y-4">
@@ -18,9 +20,15 @@ export function FilterBasicInfoSection() {
                     type="number"
                     placeholder="2009"
                     value={filters.year || ""}
-                    onChange={e => handleFiltersChange("year", e.target.value)}
+                    onChange={e => {
+                        handleFiltersChange("year", e.target.value);
+                        validateYear("year", e.target.value);
+                    }}
                     className="w-full bg-surface-dark border border-white/5 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary/50 transition-colors transition-shadow"
                 />
+                {filterFormatErrors.year && (
+                    <FilterInputError error={filterFormatErrors.year} />
+                )}
             </div>
 
             <div className="relative">
