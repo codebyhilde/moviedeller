@@ -1,35 +1,19 @@
-import { useEffect, useCallback, useMemo } from "react";
-import type { FilterState } from "./types/response.types";
+import { useEffect, useMemo } from "react";
 import { Header } from "./components/Header";
 import { MovieCard } from "./components/MovieCard";
 import { FilterSidebar } from "./components/FilterSidebar";
 import { NoMoviesFound } from "./components/NoMoviesFound";
 import { useMovies } from "./hooks/useMovies";
-import { useFilters } from "./hooks/useFilters";
+import { useFiltersContext } from "./context/FiltersContext";
 
 function App() {
     const { movies, loading, error, fetchMovies } = useMovies();
-    const { isFilterOpen, setIsFilterOpen, filters, setFilters, resetFilters } =
-        useFilters();
-
-    const handleOpenFilter = useCallback(
-        () => setIsFilterOpen(true),
-        [setIsFilterOpen]
-    );
-    const handleCloseFilter = useCallback(
-        () => setIsFilterOpen(false),
-        [setIsFilterOpen]
-    );
-    const handleApplyFilters = useCallback(
-        (currentFilters: FilterState) => {
-            fetchMovies(currentFilters);
-        },
-        [fetchMovies]
-    );
-    const handleResetFilters = useCallback(() => {
-        resetFilters();
-    }, [resetFilters]);
-
+    const { filters } = useFiltersContext();
+    
+    const handleApplyFilters = () => {
+        fetchMovies(filters);
+    };
+    
     // Cargar películas al montar el componente
     useEffect(() => {
         fetchMovies(filters);
@@ -52,7 +36,7 @@ function App() {
 
     return (
         <div className="bg-background-dark min-h-screen font-display text-white selection:bg-primary selection:text-white pb-20">
-            <Header onFilterOpen={handleOpenFilter} />
+            <Header />
             <main>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
                     {movieCards}
@@ -65,14 +49,7 @@ function App() {
                     />
                 )}
             </main>
-            <FilterSidebar
-                isOpen={isFilterOpen}
-                onClose={handleCloseFilter}
-                filters={filters}
-                setFilters={setFilters}
-                onApply={handleApplyFilters}
-                onReset={handleResetFilters}
-            />
+            <FilterSidebar onApply={handleApplyFilters}/>
             <footer className="p-4 text-center text-gray-300">
                 <p>©Moviedeller - 2025</p>
             </footer>
