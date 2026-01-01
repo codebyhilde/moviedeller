@@ -2,6 +2,7 @@ import { useEffect, useMemo } from "react";
 import { Header } from "../components/Header";
 import { MovieCard } from "../components/MovieCard";
 import { FilterSidebar } from "../components/FilterSidebar";
+import { Loader } from "../components/Loader";
 import { NoMoviesFound } from "../components/NoMoviesFound";
 import { useMovies } from "../hooks/useMovies";
 import { useFiltersContext } from "../context/FiltersContext";
@@ -9,11 +10,11 @@ import { useFiltersContext } from "../context/FiltersContext";
 function Home() {
     const { movies, loading, error, fetchMovies } = useMovies();
     const { filters } = useFiltersContext();
-    
+
     const handleApplyFilters = () => {
         fetchMovies(filters);
     };
-    
+
     // Cargar películas al montar el componente
     useEffect(() => {
         fetchMovies(filters);
@@ -25,13 +26,7 @@ function Home() {
     }, [movies]);
 
     if (loading) {
-        return (
-            <div className="bg-background-dark min-h-screen font-display text-white selection:bg-primary selection:text-white pb-20">
-                <div className="h-40 flex items-center justify-center">
-                    <div className="w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
-                </div>
-            </div>
-        );
+        return <Loader />;
     }
 
     return (
@@ -49,7 +44,7 @@ function Home() {
                     />
                 )}
             </main>
-            <FilterSidebar onApply={handleApplyFilters}/>
+            <FilterSidebar onApply={handleApplyFilters} />
             <footer className="p-4 text-center text-gray-300">
                 <p>©Moviedeller - 2025</p>
             </footer>
