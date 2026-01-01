@@ -9,6 +9,7 @@ const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3001/movies";
 
 export function useMovies() {
     const [movies, setMovies] = useState<Movie[]>([]);
+    const [movie, setMovie] = useState<Movie>({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -45,5 +46,29 @@ export function useMovies() {
         }
     }, []);
 
-    return { movies, loading, error, fetchMovies };
+    const fetchMoviesByImdbId = useCallback(async (imdb_id: string) => {
+        try {
+            setLoading(true);
+            setError(null);
+            setMovie({});
+
+            const url = `${API_URL}/${imdb_id}`;
+            const response = await fetch(url);
+
+            if (!response.ok) {
+                throw new Error(
+                    `Error ${response.status}: ${response.statusText}`
+                );
+            }
+
+            const data: Movie = await response.json();
+            setMovie(data);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Error desconocido");
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    return { movie, movies, loading, error, fetchMovies, fetchMoviesByImdbId };
 }
